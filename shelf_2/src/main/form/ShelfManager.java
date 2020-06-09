@@ -449,11 +449,11 @@ public class ShelfManager extends JPanel {
 	 * 一部の本削除
 	 */
 	private boolean deleteOne() {
+		tabPaneIndex = tabPane.getSelectedIndex();
 		// 選択されているパネルがbookの場合
-		if (tabPane.getSelectedIndex() == 0) {
+		if (tabPaneIndex == 0) {
 
 			int index = bookTbl.getSelectedRow();
-			tabPaneIndex = 0;
 			if (index == -1) {
 				return false;
 			}
@@ -465,8 +465,7 @@ public class ShelfManager extends JPanel {
 				return false;
 			}
 		}
-		if (tabPane.getSelectedIndex() == 1) {
-			tabPaneIndex = 1;
+		if (tabPaneIndex == 1) {
 			// 選択されているパネルがcdの場合
 			if (shelf[1].deleteOne(cdTbl.getSelectedRow())) {
 				return true;
