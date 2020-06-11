@@ -14,12 +14,18 @@ public class BookShelf extends Shelf {
     	products = new Production[maxCount];
     }
 
+    @Override
     public boolean add(Production production) {
     	if(production instanceof Book) {
         	products[count] = production;
+        	count++;
             return true;
     	}
         return false;
     }
 
+    @Override
+    public String getText() {
+    	return "本";
+    }
 }

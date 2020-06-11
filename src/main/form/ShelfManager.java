@@ -32,17 +32,17 @@ public class ShelfManager extends JPanel {
 	private ShelfMain shelfMain = null; // メインクラス
 	private Shelf[] shelf = { new BookShelf(), new CdShelf() };
 
-	JTextField[] bookTexts = null; // 入力欄
-	JTextField[] cdTexts = null; // 入力欄
-	JTabbedPane tabPane = null; // タブパネル
+	private JTextField[] bookTexts = null; // 入力欄
+	private JTextField[] cdTexts = null; // 入力欄
+	private JTabbedPane tabPane = null; // タブパネル
 
-	DefaultTableModel bookModel = null; //情報作成
-	DefaultTableModel cdModel = null; //情報作成
+	private DefaultTableModel bookModel = null; //情報作成
+	private DefaultTableModel cdModel = null; //情報作成
 
-	JTable bookTbl = null; // テーブル作成
-	JTable cdTbl = null; // テーブル作成
+	private JTable bookTbl = null; // テーブル作成
+	private JTable cdTbl = null; // テーブル作成
 
-	int tabPaneIndex = 0;
+	private int tabPaneIndex = 0;
 
 	/*
 	 * コンストラクタ
@@ -162,7 +162,7 @@ public class ShelfManager extends JPanel {
 					if (option == JOptionPane.YES_OPTION) {
 						// 選択削除
 						if (deleteOne()) {
-							JOptionPane.showMessageDialog(null, "選択した行を削除しました。");
+							JOptionPane.showMessageDialog(null, "選択した" + shelf[tabPaneIndex].getText() + "を削除しました。");
 
 							// 再描画
 							SetMode(main.form.Common.Mode.DELETE);
@@ -273,7 +273,6 @@ public class ShelfManager extends JPanel {
 				} else {
 					JOptionPane.showMessageDialog(null, "登録に失敗しました。");
 				}
-
 			}
 		});
 
@@ -319,10 +318,10 @@ public class ShelfManager extends JPanel {
 	 * 本追加
 	 */
 	private boolean add() {
-
+		tabPaneIndex = tabPane.getSelectedIndex();
 		// 本のタブが選択されている場合
-		if (tabPane.getSelectedIndex() == 0) {
-			if (shelf[0].getCount() < shelf[0].getMaxCount()) {
+		if (tabPaneIndex == 0) {
+			if (shelf[tabPaneIndex].getCount() < shelf[tabPaneIndex].getMaxCount()) {
 				// 題名、作者の入力チェック
 				boolean inputChk = true;
 				if (bookTexts[0].getText().length() > Book.TITLE_LENGTH) {
@@ -347,7 +346,7 @@ public class ShelfManager extends JPanel {
 					Book book = new Book();
 					if (book.setTitle(bookTexts[0].getText()) && book.setPerson(bookTexts[1].getText())) {
 						// 本棚への登録
-						if (shelf[0].add(book)) {
+						if (shelf[tabPaneIndex].add(book)) {
 							return true;
 						} else {
 							return false;
@@ -366,54 +365,52 @@ public class ShelfManager extends JPanel {
 			}
 			return false;
 		}
-		if (tabPane.getSelectedIndex() == 1) {
-			{
-				if (shelf[1].getCount() < shelf[1].getMaxCount()) {
-					// 題名、作者の入力チェック
-					boolean inputChk = true;
-					if (cdTexts[0].getText().length() > Cd.SONG_LENGTH) {
-						JOptionPane.showMessageDialog(null,
-								"曲名は" + String.valueOf(Cd.SONG_LENGTH) + "文字以内で入力してください。");
-						inputChk = false;
-					} else if (cdTexts[0].getText().length() == 0) {
-						JOptionPane.showMessageDialog(null, "曲名が未入力です。");
-						inputChk = false;
-					}
+		if (tabPaneIndex == 1) {
+			if (shelf[tabPaneIndex].getCount() < shelf[tabPaneIndex].getMaxCount()) {
+				// 題名、作者の入力チェック
+				boolean inputChk = true;
+				if (cdTexts[0].getText().length() > Cd.SONG_LENGTH) {
+					JOptionPane.showMessageDialog(null,
+							"曲名は" + String.valueOf(Cd.SONG_LENGTH) + "文字以内で入力してください。");
+					inputChk = false;
+				} else if (cdTexts[0].getText().length() == 0) {
+					JOptionPane.showMessageDialog(null, "曲名が未入力です。");
+					inputChk = false;
+				}
 
-					if (cdTexts[1].getText().length() > Cd.SINGER_LENGTH) {
-						JOptionPane.showMessageDialog(null,
-								"歌手は" + String.valueOf(Cd.SINGER_LENGTH) + "文字以内で入力してください。");
-						inputChk = false;
-					} else if (cdTexts[1].getText().length() == 0) {
-						JOptionPane.showMessageDialog(null, "歌手が未入力です。");
-						inputChk = false;
-					}
+				if (cdTexts[1].getText().length() > Cd.SINGER_LENGTH) {
+					JOptionPane.showMessageDialog(null,
+							"歌手は" + String.valueOf(Cd.SINGER_LENGTH) + "文字以内で入力してください。");
+					inputChk = false;
+				} else if (cdTexts[1].getText().length() == 0) {
+					JOptionPane.showMessageDialog(null, "歌手が未入力です。");
+					inputChk = false;
+				}
 
-					if (inputChk) {
-						// 本の生成
-						Cd cd = new Cd();
+				if (inputChk) {
+					// 本の生成
+					Cd cd = new Cd();
 
-						if (cd.setTitle(cdTexts[0].getText()) && cd.setPerson(cdTexts[1].getText())) {
-							// 本棚への登録
-							if (shelf[1].add(cd)) {
-								return true;
-							} else {
-								return false;
-							}
+					if (cd.setTitle(cdTexts[0].getText()) && cd.setPerson(cdTexts[1].getText())) {
+						// 本棚への登録
+						if (shelf[1].add(cd)) {
+							return true;
 						} else {
-							JOptionPane.showMessageDialog(null,
-									"登録に失敗しました。未入力の項目もしくは、" +
-											"曲名は" + String.valueOf(Cd.SONG_LENGTH) + "文字以内" +
-											"歌手は" + String.valueOf(Cd.SINGER_LENGTH) + "文字以内で入力してください。");
+							return false;
 						}
 					} else {
-						return false;
+						JOptionPane.showMessageDialog(null,
+								"登録に失敗しました。未入力の項目もしくは、" +
+										"曲名は" + String.valueOf(Cd.SONG_LENGTH) + "文字以内" +
+										"歌手は" + String.valueOf(Cd.SINGER_LENGTH) + "文字以内で入力してください。");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "これ以上登録できません！！");
+					return false;
 				}
-				return false;
+			} else {
+				JOptionPane.showMessageDialog(null, "これ以上登録できません！！");
 			}
+			return false;
 		}
 		return false;
 	}
@@ -422,27 +419,13 @@ public class ShelfManager extends JPanel {
 	 * 全ての本削除
 	 */
 	private boolean deleteAll() {
-		// 選択されているパネルがbookの場合
-		if (tabPane.getSelectedIndex() == 0) {
-			tabPaneIndex = 0;
-			if (shelf[0].deleteAll()) {
-				return true;
-			} else {
-				JOptionPane.showMessageDialog(null, "削除できる本はありません。");
-				return false;
-			}
+		tabPaneIndex = tabPane.getSelectedIndex();
+		if (shelf[tabPaneIndex].deleteAll()) {
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "削除できる" + shelf[tabPaneIndex].getText() + "はありません。");
+			return false;
 		}
-		if (tabPane.getSelectedIndex() == 1) {
-			tabPaneIndex = 1;
-			// 選択されているパネルがcdの場合
-			if (shelf[1].deleteAll()) {
-				return true;
-			} else {
-				JOptionPane.showMessageDialog(null, "削除できるCDはありません。");
-				return false;
-			}
-		}
-		return false;
 	}
 
 	/*
@@ -450,31 +433,27 @@ public class ShelfManager extends JPanel {
 	 */
 	private boolean deleteOne() {
 		tabPaneIndex = tabPane.getSelectedIndex();
+		int index = -1;
 		// 選択されているパネルがbookの場合
 		if (tabPaneIndex == 0) {
-
-			int index = bookTbl.getSelectedRow();
-			if (index == -1) {
-				return false;
-			}
-
-			if (shelf[0].deleteOne(index)) {
-				return true;
-			} else {
-				JOptionPane.showMessageDialog(null, "削除できる本はありません。");
-				return false;
-			}
+			index = bookTbl.getSelectedRow();
 		}
+
 		if (tabPaneIndex == 1) {
-			// 選択されているパネルがcdの場合
-			if (shelf[1].deleteOne(cdTbl.getSelectedRow())) {
-				return true;
-			} else {
-				JOptionPane.showMessageDialog(null, "削除できるCDはありません。");
-				return false;
-			}
+			index = cdTbl.getSelectedRow();
 		}
-		return false;
+
+		if (index == -1) {
+			JOptionPane.showMessageDialog(null, "削除したい" + shelf[tabPaneIndex].getText() + "を選択してください。");
+			return false;
+		}
+
+		if (shelf[tabPaneIndex].deleteOne(index)) {
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, "削除できる" + shelf[tabPaneIndex].getText() + "はありません。");
+			return false;
+		}
 	}
 
 	/*
@@ -484,7 +463,7 @@ public class ShelfManager extends JPanel {
 
 		// テーブルの列名及び設定用の値作成
 		String[] bookColumnNames = { "No", "題名", "作者" };
-		String bookTableData[][] = new String[BookShelf.MAX_BOOKS_SIZE][bookColumnNames.length];
+		String bookTableData[][] = new String[shelf[0].getMaxCount()][bookColumnNames.length];
 
 		// 登録されている本の数
 		int bookCount = shelf[0].getCount();
@@ -495,7 +474,7 @@ public class ShelfManager extends JPanel {
 		}
 
 		// 空棚の設定
-		for (int cnt = bookCount; cnt < BookShelf.MAX_BOOKS_SIZE; cnt++) {
+		for (int cnt = bookCount; cnt < shelf[0].getMaxCount(); cnt++) {
 			bookTableData[cnt][0] = String.valueOf(cnt + 1); // No
 			bookTableData[cnt][1] = ""; // タイトル
 			bookTableData[cnt][2] = ""; // 作者
@@ -514,7 +493,7 @@ public class ShelfManager extends JPanel {
 
 		// テーブルの列名及び設定用の値作成
 		String[] cdColumnNames = { "No", "曲名", "作者" };
-		String cdTableData[][] = new String[CdShelf.MAX_CDS_SIZE][cdColumnNames.length];
+		String cdTableData[][] = new String[shelf[1].getMaxCount()][cdColumnNames.length];
 
 		// 登録されているCDの数
 		int cdCount = shelf[1].getCount();
@@ -525,7 +504,7 @@ public class ShelfManager extends JPanel {
 		}
 
 		// 空棚の設定
-		for (int cnt = cdCount; cnt < CdShelf.MAX_CDS_SIZE; cnt++) {
+		for (int cnt = cdCount; cnt < shelf[1].getMaxCount(); cnt++) {
 			cdTableData[cnt][0] = String.valueOf(cnt + 1); // No
 			cdTableData[cnt][1] = ""; // タイトル
 			cdTableData[cnt][2] = ""; // 作者

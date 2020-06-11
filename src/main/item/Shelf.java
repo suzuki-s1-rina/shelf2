@@ -14,6 +14,7 @@ public abstract class Shelf {
     		return false;
     	}
     	this.products = new Production[maxCount];
+    	count = 0;
         return true;
     }
 
@@ -25,6 +26,7 @@ public abstract class Shelf {
     	for (int i = index; i < getCount(); i++) {
         	this.products[i] = this.products[i+1];
     	}
+    	count--;
         return true;
     }
 
@@ -33,12 +35,6 @@ public abstract class Shelf {
     }
 
     public int getCount() {
-    	count = 0;
-    	for (int i = 0; i < maxCount;i++) {
-    		if(products[i] != null) {
-    			count++;
-    		}
-    	}
     	return count;
     }
 
@@ -46,4 +42,7 @@ public abstract class Shelf {
     	return maxCount;
     }
 
+    public String getText() {
+    	return "";
+    }
 }
