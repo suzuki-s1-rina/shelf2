@@ -315,7 +315,7 @@ public class ShelfManager extends JPanel {
 	}
 
 	/*
-	 * 本追加
+	 * 追加
 	 */
 	private boolean add() {
 		tabPaneIndex = tabPane.getSelectedIndex();
