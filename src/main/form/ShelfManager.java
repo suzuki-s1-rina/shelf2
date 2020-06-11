@@ -200,7 +200,7 @@ public class ShelfManager extends JPanel {
 
 		// 入力項目
 		JLabel[] bookLabels = new JLabel[2];
-		bookLabels[0] = new JLabel(Book.TITLE_CAPTION); // タイトル
+		bookLabels[0] = new JLabel(Book.TITLE_CAPTION); // 題名
 		bookLabels[1] = new JLabel(Book.CREATER_CAPTION); // 作者
 
 		JLabel[] cdLabels = new JLabel[2];
@@ -281,7 +281,7 @@ public class ShelfManager extends JPanel {
 		cdLayout.setAutoCreateGaps(true);
 		cdLayout.setAutoCreateContainerGaps(true);
 
-		// 題名と作者をグルーピング設定
+		// 曲名と歌手をグルーピング設定
 		GroupLayout.SequentialGroup cdHGroup = cdLayout.createSequentialGroup();
 		cdHGroup.addGroup(cdLayout.createParallelGroup()
 				.addComponent(cdLabels[0]).addComponent(cdLabels[1]));
@@ -345,7 +345,7 @@ public class ShelfManager extends JPanel {
 					// 本の生成
 					Book book = new Book();
 					if (book.setTitle(bookTexts[0].getText()) && book.setPerson(bookTexts[1].getText())) {
-						// 本棚への登録
+						// 棚への登録
 						if (shelf[tabPaneIndex].add(book)) {
 							return true;
 						} else {
@@ -367,7 +367,7 @@ public class ShelfManager extends JPanel {
 		}
 		if (tabPaneIndex == 1) {
 			if (shelf[tabPaneIndex].getCount() < shelf[tabPaneIndex].getMaxCount()) {
-				// 題名、作者の入力チェック
+				// 曲名、歌手の入力チェック
 				boolean inputChk = true;
 				if (cdTexts[0].getText().length() > Cd.SONG_LENGTH) {
 					JOptionPane.showMessageDialog(null,
@@ -388,11 +388,11 @@ public class ShelfManager extends JPanel {
 				}
 
 				if (inputChk) {
-					// 本の生成
+					// CDの生成
 					Cd cd = new Cd();
 
 					if (cd.setTitle(cdTexts[0].getText()) && cd.setPerson(cdTexts[1].getText())) {
-						// 本棚への登録
+						// 棚への登録
 						if (shelf[1].add(cd)) {
 							return true;
 						} else {
@@ -416,7 +416,7 @@ public class ShelfManager extends JPanel {
 	}
 
 	/*
-	 * 全ての本削除
+	 * 全削除
 	 */
 	private boolean deleteAll() {
 		tabPaneIndex = tabPane.getSelectedIndex();
@@ -429,16 +429,17 @@ public class ShelfManager extends JPanel {
 	}
 
 	/*
-	 * 一部の本削除
+	 * 一部削除
 	 */
 	private boolean deleteOne() {
 		tabPaneIndex = tabPane.getSelectedIndex();
 		int index = -1;
-		// 選択されているパネルがbookの場合
+		// 選択されているパネルが本の場合
 		if (tabPaneIndex == 0) {
 			index = bookTbl.getSelectedRow();
 		}
 
+		// 選択されているパネルがCDの場合
 		if (tabPaneIndex == 1) {
 			index = cdTbl.getSelectedRow();
 		}
@@ -469,14 +470,14 @@ public class ShelfManager extends JPanel {
 		int bookCount = shelf[0].getCount();
 		for (int cnt = 0; cnt < bookCount; cnt++) {
 			bookTableData[cnt][0] = String.valueOf(cnt + 1); // No
-			bookTableData[cnt][1] = shelf[0].get(cnt).getTitle(); // タイトル
+			bookTableData[cnt][1] = shelf[0].get(cnt).getTitle(); // 題名
 			bookTableData[cnt][2] = shelf[0].get(cnt).getPerson(); // 作者
 		}
 
 		// 空棚の設定
 		for (int cnt = bookCount; cnt < shelf[0].getMaxCount(); cnt++) {
 			bookTableData[cnt][0] = String.valueOf(cnt + 1); // No
-			bookTableData[cnt][1] = ""; // タイトル
+			bookTableData[cnt][1] = ""; // 題名
 			bookTableData[cnt][2] = ""; // 作者
 		}
 
@@ -492,7 +493,7 @@ public class ShelfManager extends JPanel {
 		tabPane.add(Book.NAME, bookSp);
 
 		// テーブルの列名及び設定用の値作成
-		String[] cdColumnNames = { "No", "曲名", "作者" };
+		String[] cdColumnNames = { "No", "曲名", "歌手" };
 		String cdTableData[][] = new String[shelf[1].getMaxCount()][cdColumnNames.length];
 
 		// 登録されているCDの数
@@ -506,8 +507,8 @@ public class ShelfManager extends JPanel {
 		// 空棚の設定
 		for (int cnt = cdCount; cnt < shelf[1].getMaxCount(); cnt++) {
 			cdTableData[cnt][0] = String.valueOf(cnt + 1); // No
-			cdTableData[cnt][1] = ""; // タイトル
-			cdTableData[cnt][2] = ""; // 作者
+			cdTableData[cnt][1] = ""; // 曲名
+			cdTableData[cnt][2] = ""; // 歌手
 		}
 
 		// 情報作成
